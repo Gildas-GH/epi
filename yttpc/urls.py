@@ -20,7 +20,7 @@ urlpatterns = [
         views.make_feed_from_playlist,
         name='make_feed_from_playlist'),
 
-    url(r'^download/(?P<video_id>[a-zA-Z0-9_-]+$)',
+    url(r'^download/(?P<video_id>[a-zA-Z0-9_-]+)\.m4a$',
         views.redirect_to_file,
         name='redirect_to_file'), 
 

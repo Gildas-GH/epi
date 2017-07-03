@@ -75,7 +75,7 @@ def watch_url(request):
 
 def redirect_to_file(request, video_id):
 
-    video_url = BASE_VIDEO_URL + video_id.split('.')[0]
+    video_url = BASE_VIDEO_URL + video_id
     video = pafy.new(video_url)
 
     stream = video.getbestaudio(preftype='m4a') 

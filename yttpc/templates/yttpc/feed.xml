@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>{{ items.0.snippet.channelTitle }}</title>
+        <link>http://www.YourSite.com</link>
+        <description>Verbose description of the podcast.</description>
+        <language>en-us</language>
+        
+        {% for item in items %}
+        <item>
+            <title>{{ item.snippet.title }}</title>
+            <description>{{ item.snippet.description }}</description>
+            <enclosure url="http://{{ request.get_host }}{% url 'redirect_to_file' item.id.videoId %}" type="audio/m4a" length="1" />
+            <guid>http://{{ request.get_host }}{% url 'redirect_to_file' item.id.videoId %}</guid>
+            <pubDate>{{ item.snippet.publishedAt </pubDate>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

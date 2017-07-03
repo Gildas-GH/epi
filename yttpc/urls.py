@@ -8,11 +8,11 @@ urlpatterns = [
 
     url(r'^watch', views.watch_url, name='watch_url'),
     
-    url(r'^channel/(?P<channel_id>[a-zA-Z0-9_-]+)',
+    url(r'^channel/([a-zA-Z0-9_-]+)',
         views.make_feed_from_channel,
         name='make_feed_from_channel'),
 
-    url(r'^user/(?P<username>[a-zA-Z0-9_-]+)',
+    url(r'^user/([a-zA-Z0-9_-]+)',
         views.make_feed_from_user,
         name='make_feed_from_user'),
 
@@ -20,7 +20,7 @@ urlpatterns = [
         views.make_feed_from_playlist,
         name='make_feed_from_playlist'),
 
-    url(r'^download/(?P<video_id>[a-zA-Z0-9_-]+)\.m4a$',
+    url(r'^download/([a-zA-Z0-9_-]+)\.m4a$',
         views.redirect_to_file,
         name='redirect_to_file'), 
 

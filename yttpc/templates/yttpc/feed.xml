@@ -10,9 +10,9 @@
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="http://{{ request.get_host }}{% url 'redirect_to_file' item.id.videoId %}" type="audio/m4a" length="1" />
-            <guid>http://{{ request.get_host }}{% url 'redirect_to_file' item.id.videoId %}.m4a</guid>
-            <pubDate>{{ item.snippet.publishedAt </pubDate>
+            <enclosure url="http://{{ request.get_host }}{% url 'redirect_to_file' item.snippet.resourceId.videoId %}" type="audio/m4a" length="1" />
+            <guid>http://{{ request.get_host }}{% url 'redirect_to_file' item.snippet.resourceId.videoId %}</guid>
+            <pubDate>{{ item.snippet.publishedAt }}</pubDate>
         </item>
         {% endfor %}
     </channel>

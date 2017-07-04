@@ -14,7 +14,7 @@
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.snippet.resourceId.videoId %}.{{ media_extension }}" type="audio/mp4" length='10000000'/>
+            <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.snippet.resourceId.videoId %}.{{ media_extension }}" type="audio/mp4" length='500'/>
             <guid>http://{{ request.get_host }}{% url 'download' podcast_type item.snippet.resourceId.videoId %}.{{ media_extension }}</guid>
             <pubDate>{{ item.snippet.publishedAt }}</pubDate>
         </item>

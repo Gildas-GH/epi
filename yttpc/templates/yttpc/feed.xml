@@ -3,8 +3,14 @@
     <channel>
         <title>{{ items.0.snippet.channelTitle }}</title>
         <link>http://www.YourSite.com</link>
-        <description>Verbose description of the podcast.</description>
+        <description>{{ channel_data.items.0.snippet.description }}</description>
         <language>en-us</language>
+
+        <image>
+            <url>{{ channel_data.items.0.snippet.thumbnails.default.url }}</url>
+            <title>Title or description of your logo</title>
+            <link>http://www.YourSite.com</link>
+        </image>
         
         {% for item in items %}
         <item>

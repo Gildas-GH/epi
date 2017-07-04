@@ -8,7 +8,7 @@ urlpatterns = [
 
     url(r'^watch$', views.watch_url, name='watch_url'),
     
-    url(r'^(channel|user)/([a-zA-Z0-9_-]+)', views.get_uploads_playlist),
+    url(r'^(channel|user)/([a-zA-Z0-9_-]+)', views.make_feed_from_channel),
 
     url(r'^playlist', views.make_feed_from_playlist),
 
@@ -16,6 +16,6 @@ urlpatterns = [
         views.redirect_to_file,
         name='redirect_to_file'),
 
-    url(r'^([a-zA-Z0-9_-]+)$', views.get_uploads_playlist),
+    url(r'^([a-zA-Z0-9_-]+)$', views.get_channel_data),
 
 ]

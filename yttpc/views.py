@@ -15,56 +15,32 @@ BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 
 
 def index(request):
-    """Present the homepage."""
-
+    """The landing page."""
     return HttpResponse('This is the landing page.')
 
 
-def get_uploads_playlist(request, id_type, id):
-    """Get the 'uploads' playlist from user or channel, and then generate
-    a feed from the playlist."""
+def make_feed_from_channel(request, id_type, id):
 
-    if id_type == 'user':
-        id_type = 'forUsername'
-    if id_type == 'channel':
-        id_type = 'id'
-
-    qs_params = {'key': KEY,
-                id_type: id,
-                'part': 'contentDetails'}
-
-    data_url = (ENDPOINT + 'channels?' + urlencode(qs_params))
-
-    with urlopen(data_url) as response:
-        json_data = response.read()
+    channel_data = get_channel_data(id_type, id)
+    uploads_playlist_id = get_uploads_playlist_id(channel_data)
+    playlist_data = get_playlist_data(uploads_playlist_id)
     
-    data_dict = json.loads(json_data)
+    playlist_data['channel_data'] = channel_data
 
-    try:
-        uploads_playlist_id = data_dict['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-    except IndexError as e:
-        return HttpResponse('No such channel/user found.')
+    return render(request, 'yttpc/feed.xml', playlist_data)
 
-    return make_feed_from_playlist(request, uploads_playlist_id)
+def make_feed_from_playlist(request):
 
-
-def make_feed_from_playlist(request, playlist_id=None):
-    """Generate an RSS feed from JSON playlist data."""
-
-    if not playlist_id:
+    if 'list' in request.GET:
         playlist_id = request.GET['list']
+    playlist_data = get_playlist_data(playlist_id)
+    channel_id = get_channel_id(playlist_data)
+    channel_data = get_channel_data('channel', channel_id)
     
-    qs_params = {'key': KEY,
-                 'playlistId': playlist_id,
-                 'part': 'snippet',
-                 'maxResults': 50}
+    playlist_data['channel_data'] = channel_data
 
-    data_url = (ENDPOINT + 'playlistItems?' + urlencode(qs_params))
+    return render(request, 'yttpc/feed.xml', playlist_data)
 
-    with urlopen(data_url) as response:
-        json_data = response.read()
-
-    context = json.loads(json_data)
 
     #Reformat dates for RSS
     # for item in context['items']:
@@ -72,8 +48,6 @@ def make_feed_from_playlist(request, playlist_id=None):
     #     parsed = parse_datetime(date_ISO)
     #     date_RFC = email.utils.format_datetime(parsed)
     #     item['snippet']['publishedAt'] = date_RFC
-
-    return render(request, 'yttpc/feed.xml', context)
 
 
 def watch_url(request):
@@ -85,6 +59,7 @@ def watch_url(request):
         return HttpResponse('This is just a single video.')
 
 
+
 def redirect_to_file(request, video_id):
     """Redirect for media download"""
 
@@ -94,3 +69,61 @@ def redirect_to_file(request, video_id):
     stream = video.getbestaudio(preftype='m4a') 
 
     return redirect(stream.url)
+
+
+def get_channel_data(id_type, id):
+
+    if id_type == 'channel':
+        id_type = 'id'
+    if id_type == 'user':
+        id_type = 'forUsername'
+
+    qs_params = {'key': KEY,
+                id_type: id,
+                'part': 'contentDetails,snippet'}
+
+    data_url = (ENDPOINT + 'channels?' + urlencode(qs_params))
+
+    with urlopen(data_url) as response:
+        channel_data = response.read()
+
+    channel_data = json.loads(channel_data)
+    return channel_data
+
+
+def get_playlist_data(playlist_id):
+
+    qs_params = {'key': KEY,
+                 'playlistId': playlist_id,
+                 'part': 'snippet',
+                 'maxResults': 50}
+
+    data_url = (ENDPOINT + 'playlistItems?' + urlencode(qs_params))
+
+    with urlopen(data_url) as response:
+        json_data = response.read()
+
+    playlist_data = json.loads(json_data)
+
+    return playlist_data
+
+
+def get_uploads_playlist_id(channel_data):
+
+    try: 
+        playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+    except IndexError:
+        return
+
+    return playlist_id
+
+
+def get_channel_id(playlist_data):
+
+    try: 
+        channel_id = playlist_data['items'][0]['snippet']['channelId']
+    except IndexError:
+        return
+
+    return channel_id
+

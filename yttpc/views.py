@@ -96,9 +96,6 @@ def download(request, media_type, video_id):
     else:
         stream = video.getbestaudio(preftype='mp3')
 
-    with open('scratch/text.txt', 'w') as f:
-        f.write(stream.url)
-
     return redirect(stream.url)
 
 

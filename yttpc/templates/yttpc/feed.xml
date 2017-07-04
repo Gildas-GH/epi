@@ -7,14 +7,14 @@
         <language>en-us</language>
 
         <image>
-            <url>{{ channel_data.items.0.snippet.thumbnails.high.url }}</url>
+            <url>{{ channel_data.items.0.snippet.thumbnails.maxrhes.url }}</url>
         </image>
         
         {% for item in items %}
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="{{ request.scheme }}://{{ request.get_host }}{% url 'download' item.snippet.resourceId.videoId %}" type="audio/m4a"/>
+            <enclosure url="http://{{ request.get_host }}{% url 'download' item.snippet.resourceId.videoId %}" type="audio/m4a"/>
             <guid>{{ item.snippet.resourceId.videoId }}</guid>
             <pubDate>{{ item.snippet.publishedAt }}</pubDate>
         </item>

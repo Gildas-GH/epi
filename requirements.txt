@@ -21,3 +21,4 @@ uritemplate==3.0.0
 virtualenv==15.1.0
 whitenoise==3.3.0
 wrapt==1.10.10
+youtube-dl==2017.7.2

@@ -20,58 +20,74 @@ def index(request):
 
 
 def make_feed_from_channel(request, id_type, id):
-
-    channel_data = get_channel_data(id_type, id)
-    uploads_playlist_id = get_uploads_playlist_id(channel_data)
-    playlist_data = get_playlist_data(uploads_playlist_id)
     
-    playlist_data['channel_data'] = channel_data
+    channel_data = get_channel_data(id_type, id)
+    
+    try:
+        uploads_playlist_id = get_uploads_playlist_id(channel_data)
+    except IndexError as e:
+        return HttpResponse('Invalid user or channel.')
 
-    return render(request, 'yttpc/feed.xml', playlist_data)
+    playlist_data = get_playlist_data(uploads_playlist_id)
+
+    return render_feed(request, playlist_data, channel_data)
+
 
 def make_feed_from_playlist(request):
 
-    if 'list' in request.GET:
+    try:
         playlist_id = request.GET['list']
-    playlist_data = get_playlist_data(playlist_id)
+    except KeyError:
+        return HttpResponse('Invalid playlist.')
+    
+    try:
+        playlist_data = get_playlist_data(playlist_id)
+    except HTTPError:
+        return HttpResponse('Invalid playlist.')
+    
     channel_id = get_channel_id(playlist_data)
     channel_data = get_channel_data('channel', channel_id)
-    
+
+    return render_feed(request, playlist_data, channel_data)
+
+
+def render_feed(request, playlist_data, channel_data):
+    """Render an RSS feed, given the playlist and channel data."""
+
+    #Reformat dates for RSS (RFC 2822)
+    for item in playlist_data['items']:
+        date_ISO = item['snippet']['publishedAt']
+        parsed = parse_datetime(date_ISO)
+        date_RFC = email.utils.format_datetime(parsed)
+        item['snippet']['publishedAt'] = date_RFC
+
+    #Combine playlist data and channel data into single context
     playlist_data['channel_data'] = channel_data
 
     return render(request, 'yttpc/feed.xml', playlist_data)
 
 
-    #Reformat dates for RSS
-    # for item in context['items']:
-    #     date_ISO = item['snippet']['publishedAt']
-    #     parsed = parse_datetime(date_ISO)
-    #     date_RFC = email.utils.format_datetime(parsed)
-    #     item['snippet']['publishedAt'] = date_RFC
-
-
-def watch_url(request):
+def handle_watch_url(request):
     """Handle '/watch?v=' urls, which may contain playlist parameters or just single videos."""
 
     if 'list' in request.GET:
         return make_feed_from_playlist(request)
     else:
-        return HttpResponse('This is just a single video.')
+        return HttpResponse('This appears to be just a single video.')
 
 
-
-def redirect_to_file(request, video_id):
-    """Redirect for media download"""
+def download(request, video_id):
+    """Redirect for media download."""
 
     video_url = BASE_VIDEO_URL + video_id
     video = pafy.new(video_url)
-
     stream = video.getbestaudio(preftype='m4a') 
 
     return redirect(stream.url)
 
 
 def get_channel_data(id_type, id):
+    """Return a dictionary of channel data from a username or channel id."""
 
     if id_type == 'channel':
         id_type = 'id'
@@ -92,6 +108,7 @@ def get_channel_data(id_type, id):
 
 
 def get_playlist_data(playlist_id):
+    """Return a dictionary of playlist data from a playlist id."""
 
     qs_params = {'key': KEY,
                  'playlistId': playlist_id,
@@ -109,21 +126,17 @@ def get_playlist_data(playlist_id):
 
 
 def get_uploads_playlist_id(channel_data):
+    """Extract the 'uploads' playlist id from a channel."""
 
-    try: 
-        playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-    except IndexError:
-        return
+    playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
 
     return playlist_id
 
 
 def get_channel_id(playlist_data):
-
-    try: 
-        channel_id = playlist_data['items'][0]['snippet']['channelId']
-    except IndexError:
-        return
+    """Extract the channel id from a playlist."""
+ 
+    channel_id = playlist_data['items'][0]['snippet']['channelId']
 
     return channel_id
 

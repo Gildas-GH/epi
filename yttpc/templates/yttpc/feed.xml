@@ -7,17 +7,15 @@
         <language>en-us</language>
 
         <image>
-            <url>{{ channel_data.items.0.snippet.thumbnails.default.url }}</url>
-            <title>Title or description of your logo</title>
-            <link>http://www.YourSite.com</link>
+            <url>{{ channel_data.items.0.snippet.thumbnails.high.url }}</url>
         </image>
         
         {% for item in items %}
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="http://{{ request.get_host }}{% url 'redirect_to_file' item.snippet.resourceId.videoId %}" type="audio/m4a" length="1" />
-            <guid>http://{{ request.get_host }}{% url 'redirect_to_file' item.snippet.resourceId.videoId %}</guid>
+            <enclosure url="http://{{ request.get_host }}{% url 'download' item.snippet.resourceId.videoId %}" type="audio/m4a"/>
+            <guid>http://{{ request.get_host }}{% url 'download' item.snippet.resourceId.videoId %}</guid>
             <pubDate>{{ item.snippet.publishedAt }}</pubDate>
         </item>
         {% endfor %}

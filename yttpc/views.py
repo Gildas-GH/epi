@@ -71,7 +71,7 @@ def render_feed(request, playlist_data, channel_data, podcast_type):
     if podcast_type == 'video':
         playlist_data['media_extension'] = 'mp4'
     else:
-        playlist_data['media_extension'] = 'm4a'
+        playlist_data['media_extension'] = 'mp3'
 
     return render(request, 'yttpc/feed.xml', playlist_data)
 
@@ -94,7 +94,10 @@ def download(request, media_type, video_id):
     if media_type == 'video':
         stream = video.getbest(preftype="mp4")
     else:
-        stream = video.getbestaudio(preftype='m4a') 
+        stream = video.getbestaudio(preftype='mp3')
+
+    with open('scratch/text.txt', 'w') as f:
+        f.write(stream.url)
 
     return redirect(stream.url)
 
@@ -134,7 +137,6 @@ def get_playlist_data(playlist_id):
         json_data = response.read()
 
     playlist_data = json.loads(json_data)
-
     return playlist_data
 
 
@@ -142,7 +144,6 @@ def get_uploads_playlist_id(channel_data):
     """Extract the 'uploads' playlist id from a channel."""
 
     playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-
     return playlist_id
 
 
@@ -150,6 +151,5 @@ def get_channel_id(playlist_data):
     """Extract the channel id from a playlist."""
  
     channel_id = playlist_data['items'][0]['snippet']['channelId']
-
     return channel_id
 

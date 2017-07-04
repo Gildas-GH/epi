@@ -12,7 +12,7 @@ urlpatterns = [
 
     url(r'^playlist', views.make_feed_from_playlist),
 
-    url(r'^download/([a-zA-Z0-9_-]+)\.m4a$',
+    url(r'^download/(audio|video)/([a-zA-Z0-9_-]+)',
         views.download,
         name='download'),
 

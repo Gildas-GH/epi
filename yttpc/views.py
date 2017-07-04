@@ -30,7 +30,7 @@ def make_feed_from_channel(request, id_type, id):
 
     playlist_data = get_playlist_data(uploads_playlist_id)
 
-    return render_feed(request, playlist_data, channel_data)
+    return render_feed(request, playlist_data, channel_data, request.GET.get('type', 'audio'))
 
 
 def make_feed_from_playlist(request):
@@ -48,11 +48,11 @@ def make_feed_from_playlist(request):
     channel_id = get_channel_id(playlist_data)
     channel_data = get_channel_data('channel', channel_id)
 
-    return render_feed(request, playlist_data, channel_data)
+    return render_feed(request, playlist_data, channel_data, request.GET.get('type', 'audio'))
 
 
-def render_feed(request, playlist_data, channel_data):
-    """Render an RSS feed, given the playlist and channel data."""
+def render_feed(request, playlist_data, channel_data, podcast_type):
+    """Render an RSS feed, given the playlist data, channel data, and desired media type."""
 
     #Reformat dates for RSS (RFC 2822)
     for item in playlist_data['items']:
@@ -61,8 +61,17 @@ def render_feed(request, playlist_data, channel_data):
         date_RFC = email.utils.format_datetime(parsed)
         item['snippet']['publishedAt'] = date_RFC
 
-    #Combine playlist data and channel data into single context
+    #Add channel data to playlist data to make single context
     playlist_data['channel_data'] = channel_data
+    
+    #Add media type
+    playlist_data['podcast_type'] = podcast_type
+    
+    #Add media extension
+    if podcast_type == 'video':
+        playlist_data['media_extension'] = 'mp4'
+    else:
+        playlist_data['media_extension'] = 'm4a'
 
     return render(request, 'yttpc/feed.xml', playlist_data)
 
@@ -76,12 +85,16 @@ def handle_watch_url(request):
         return HttpResponse('This appears to be just a single video.')
 
 
-def download(request, video_id):
+def download(request, media_type, video_id):
     """Redirect for media download."""
 
     video_url = BASE_VIDEO_URL + video_id
     video = pafy.new(video_url)
-    stream = video.getbestaudio(preftype='m4a') 
+
+    if media_type == 'video':
+        stream = video.getbest(preftype="mp4")
+    else:
+        stream = video.getbestaudio(preftype='m4a') 
 
     return redirect(stream.url)
 

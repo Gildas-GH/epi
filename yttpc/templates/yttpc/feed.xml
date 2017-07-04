@@ -14,8 +14,8 @@
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="{% url 'download' item.snippet.resourceId.videoId %}" type="audio/m4a"/>
-            <guid>{% url 'download' item.snippet.resourceId.videoId %}</guid>
+            <enclosure url="{{ request.scheme }}://{{ request.get_host }}{% url 'download' item.snippet.resourceId.videoId %}" type="audio/m4a"/>
+            <guid>{{ item.snippet.resourceId.videoId }}</guid>
             <pubDate>{{ item.snippet.publishedAt }}</pubDate>
         </item>
         {% endfor %}

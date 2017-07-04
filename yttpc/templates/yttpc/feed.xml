@@ -7,7 +7,7 @@
         <language>en-us</language>
 
         <image>
-            <url>{{ channel_data.items.0.snippet.thumbnails.maxrhes.url }}</url>
+            <url>{{ channel_data.items.0.snippet.thumbnails.maxres.url }}</url>
         </image>
         
         {% for item in items %}

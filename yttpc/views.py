@@ -92,9 +92,13 @@ def download(request, media_type, video_id):
     if media_type == 'video':
         stream = video.getbest(preftype="mp4")
     else:
-        stream = video.getbestaudio(preftype='m4a')
-
-    return redirect(stream.url)
+        audiostreams = video.audiostreams
+        for audiostream in audiostreams:
+            if audiostream.bitrate == '48k':
+                stream = audiostream
+    
+    redirect_url = stream.url
+    return redirect(redirect_url)
 
 
 def get_channel_data(id_type, id):

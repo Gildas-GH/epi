@@ -71,7 +71,7 @@ def render_feed(request, playlist_data, channel_data, podcast_type):
     if podcast_type == 'video':
         playlist_data['media_extension'] = 'mp4'
     else:
-        playlist_data['media_extension'] = 'mp3'
+        playlist_data['media_extension'] = 'm4a'
 
     return render(request, 'yttpc/feed.xml', playlist_data)
 
@@ -94,7 +94,7 @@ def download(request, media_type, video_id):
     if media_type == 'video':
         stream = video.getbest(preftype="mp4")
     else:
-        stream = video.getbestaudio(preftype='mp3')
+        stream = video.getbestaudio(preftype='m4a')
 
     return redirect(stream.url)
 

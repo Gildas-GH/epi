@@ -69,7 +69,7 @@ def render_feed(request, playlist_data, channel_data, podcast_type):
     playlist_data['podcast_type'] = podcast_type
     
     #Add media extension
-    playlist_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'webm'
+    playlist_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
 
     return render(request, 'yttpc/feed.xml', playlist_data)
 
@@ -89,7 +89,7 @@ def download(request, media_type, video_id):
     video_url = BASE_VIDEO_URL + video_id
     video = pafy.new(video_url)
 
-    stream = video.getbest(preftype="mp4") if media_type == 'video' else video.getbestaudio(preftype="webm")
+    stream = video.getbest(preftype="mp4") if media_type == 'video' else video.getbestaudio(preftype="m4a")
     
     redirect_url = stream.url
     return redirect(redirect_url)

@@ -65,7 +65,7 @@ def render_feed(request, playlist_data, channel_data, podcast_type):
     #Add channel data to video data to make single context
     playlist_data['channel_data'] = channel_data
     
-    #Add media type
+    #Add media type to context
     playlist_data['podcast_type'] = podcast_type
     
     #Add media extension
@@ -89,13 +89,7 @@ def download(request, media_type, video_id):
     video_url = BASE_VIDEO_URL + video_id
     video = pafy.new(video_url)
 
-    if media_type == 'video':
-        stream = video.getbest(preftype="mp4")
-    else:
-        audiostreams = video.audiostreams
-        for audiostream in audiostreams:
-            if audiostream.bitrate == '48k':
-                stream = audiostream
+    stream = video.getbest(preftype="mp4") if media_type == 'video' else video.getbestaudio(preftype="m4a")
     
     redirect_url = stream.url
     return redirect(redirect_url)
@@ -108,7 +102,6 @@ def get_channel_data(id_type, id):
     channel_data = yt_api_call('channels', 'contentDetails,snippet', id_type, id)
     
     return channel_data
-
 
 
 def get_playlist_data(playlist_id):
@@ -138,9 +131,6 @@ def get_channel_id(playlist_data):
  
     channel_id = playlist_data['items'][0]['snippet']['channelId']
     return channel_id
-
-
-
 
 
 def yt_api_call(path, part, id_type, id):

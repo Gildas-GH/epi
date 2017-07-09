@@ -4,9 +4,10 @@ from django.utils.dateparse import parse_datetime
 import email.utils
 import json
 import pafy
+from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import urlopen
-from urllib.error import HTTPError
+
 
 #Youtube API
 KEY = 'AIzaSyBVKqUnRv1X67Y9wjTfd_5u0vg9LND9Zg0'
@@ -26,11 +27,11 @@ def make_feed_from_channel(request, id_type, id):
     try:
         uploads_playlist_id = get_uploads_playlist_id(channel_data)
     except IndexError as e:
-        return HttpResponse('Invalid user or channel.')
+        return HttpResponse('It appears that "{}" is not a valid {}.'.format(id, id_type))
 
     playlist_data = get_playlist_data(uploads_playlist_id)
 
-    return render_feed(request, playlist_data, channel_data, request.GET.get('type', 'audio'))
+    return render_feed(request, playlist_data, channel_data)
 
 
 def make_feed_from_playlist(request):
@@ -38,22 +39,21 @@ def make_feed_from_playlist(request):
     try:
         playlist_id = request.GET['list']
     except KeyError:
-        return HttpResponse('Invalid playlist.')
+        return HttpResponse('Invalid URL.')
     
     try:
         playlist_data = get_playlist_data(playlist_id)
     except HTTPError:
-        return HttpResponse('Invalid playlist.')
+        return HttpResponse('It appears that "{}" is not a valid playlist.'.format(request.GET['list']))
     
-
     channel_id = get_channel_id(playlist_data)
     channel_data = get_channel_data('channel', channel_id)
 
-    return render_feed(request, playlist_data, channel_data, request.GET.get('type', 'audio'))
+    return render_feed(request, playlist_data, channel_data)
 
 
-def render_feed(request, playlist_data, channel_data, podcast_type):
-    """Render an RSS feed, given the playlist data, channel data, and desired media type."""
+def render_feed(request, playlist_data, channel_data):
+    """Render an RSS feed from the playlist data, channel data, and desired media type."""
 
     #Reformat dates for RSS (RFC 2822)
     for item in playlist_data['items']:
@@ -65,7 +65,8 @@ def render_feed(request, playlist_data, channel_data, podcast_type):
     #Add channel data to video data to make single context
     playlist_data['channel_data'] = channel_data
     
-    #Add media type to context
+    #Add media type
+    podcast_type = 'video' if int(request.GET.get('vid', 0)) else 'audio'
     playlist_data['podcast_type'] = podcast_type
     
     #Add media extension
@@ -134,6 +135,7 @@ def get_channel_id(playlist_data):
 
 
 def yt_api_call(path, part, id_type, id):
+    """Make a call to tye Youtube API"""
 
     params = {'key': KEY,
               id_type: id,
@@ -146,6 +148,3 @@ def yt_api_call(path, part, id_type, id):
         json_data = response.read()
 
     return json.loads(json_data)
-
-
-

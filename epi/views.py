@@ -76,7 +76,7 @@ def render_feed(request, playlist_data, channel_data):
     #Add media extension
     playlist_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
 
-    return render(request, 'yttpc/feed.xml', playlist_data)
+    return render(request, 'epi/feed.xml', playlist_data)
 
 
 def handle_watch_url(request):

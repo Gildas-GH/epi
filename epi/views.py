@@ -7,10 +7,10 @@ import pafy
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import urlopen
+from .g import KEY
 
 
 #Youtube API
-KEY = 'AIzaSyBVKqUnRv1X67Y9wjTfd_5u0vg9LND9Zg0'
 ENDPOINT = 'https://www.googleapis.com/youtube/v3/'
 BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 

@@ -14,10 +14,14 @@ KEY = 'AIzaSyBVKqUnRv1X67Y9wjTfd_5u0vg9LND9Zg0'
 ENDPOINT = 'https://www.googleapis.com/youtube/v3/'
 BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 
+#Landing page
+LANDING_URL = "https://epiapp.github.io"
+
 
 def index(request):
     """The landing page."""
-    return HttpResponse('This is the landing page.')
+
+    return redirect(LANDING_URL)
 
 
 def make_feed_from_channel(request, id_type, id):

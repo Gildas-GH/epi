@@ -150,7 +150,7 @@ def get_channel_id(playlist_data):
 
 
 def yt_api_call(path, part, id_type, id):
-    """Make a call to tye Youtube API"""
+    """Make a call to the Youtube API"""
 
     params = {'key': KEY,
               id_type: id,

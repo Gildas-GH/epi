@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" >
     <channel>
-        <title>{{ items.0.snippet.channelTitle }}</title>
-        <link>http://www.YourSite.com</link>
+        <title>{{ channel_data.items.0.snippet.title }}</title>
+        <link>https://www.youtube.com/channel/{{ channel_data.items.0.id }}</link>
         <description>{{ channel_data.items.0.snippet.description }}</description>
         <language>en-us</language>
 
@@ -14,9 +14,10 @@
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.snippet.resourceId.videoId %}.{{ media_extension }}" type="audio/mp4"/>
-            <guid>http://{{ request.get_host }}{% url 'download' podcast_type item.snippet.resourceId.videoId %}.{{ media_extension }}</guid>
+            <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}" type="audio/mp4"/>
+            <guid>http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}</guid>
             <pubDate>{{ item.snippet.publishedAt }}</pubDate>
+            <itunes:duration>{{ item.contentDetails.duration }}</itunes:duration>
         </item>
         {% endfor %}
     </channel>

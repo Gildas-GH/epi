@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.dateparse import parse_datetime
 import email.utils
+import isodate
 import json
 import pafy
 from urllib.error import HTTPError
@@ -59,24 +60,34 @@ def make_feed_from_playlist(request):
 def render_feed(request, playlist_data, channel_data):
     """Render an RSS feed from the playlist data, channel data, and desired media type."""
 
-    #Reformat dates for RSS (RFC 2822)
-    for item in playlist_data['items']:
+    videos_data = get_videos_data(playlist_data)
+
+    
+    for item in videos_data['items']:
+        #Reformat dates for RSS (RFC 2822)
         date_ISO = item['snippet']['publishedAt']
         parsed = parse_datetime(date_ISO)
         date_RFC = email.utils.format_datetime(parsed)
         item['snippet']['publishedAt'] = date_RFC
 
+
+        #Format duration for iTunes
+        duration_iso = item['contentDetails']['duration']
+        parsed = isodate.parse_duration(duration_iso)
+        item['contentDetails']['duration'] = str(parsed)
+
+
     #Add channel data to video data to make single context
-    playlist_data['channel_data'] = channel_data
+    videos_data['channel_data'] = channel_data
     
     #Add media type
     podcast_type = 'video' if int(request.GET.get('vid', 0)) else 'audio'
-    playlist_data['podcast_type'] = podcast_type
+    videos_data['podcast_type'] = podcast_type
     
     #Add media extension
-    playlist_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
+    videos_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
 
-    return render(request, 'epi/feed.xml', playlist_data)
+    return render(request, 'epi/feed.xml', videos_data)
 
 
 def handle_watch_url(request):
@@ -116,12 +127,12 @@ def get_playlist_data(playlist_id):
     return playlist_data
 
 
-# def get_videos_data(playlist_data):
+def get_videos_data(playlist_data):
 
-#     video_ids = [item['snippet']['resourceId']['videoId'] for item in playlist_data['items']]
+    video_ids = [item['snippet']['resourceId']['videoId'] for item in playlist_data['items']]
 
-#     videos_data = yt_api_call('videos', 'snippet,contentDetails', 'id', ','.join(video_ids))
-#     return videos_data
+    videos_data = yt_api_call('videos', 'snippet,contentDetails', 'id', ','.join(video_ids))
+    return videos_data
 
 
 def get_uploads_playlist_id(channel_data):

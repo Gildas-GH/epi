@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 theme: jekyll-theme-minimal
 
 gems:
   - jekyll-seo-tag
-=======
-theme: jekyll-theme-slate
->>>>>>> 0b0b40b4e3528c7e8c236b932729cd78cf14b06d

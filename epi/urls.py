@@ -4,9 +4,9 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.index),
 
-    url(r'^watch$', views.handle_watch_url, name='watch_url'),
+    url(r'^watch$', views.handle_watch_url),
     
     url(r'^(channel|user)/([a-zA-Z0-9_-]+)', views.make_feed_from_channel),
 
@@ -16,6 +16,6 @@ urlpatterns = [
         views.download,
         name='download'),
 
-    url(r'^([a-zA-Z0-9_-]+)$', views.get_channel_data),
+    url(r'^([a-zA-Z0-9_-]+)$', views.make_feed_from_channel),
 
 ]

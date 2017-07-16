@@ -1,4 +1,4 @@
-# Epi - Convert any YouTube channel into a downloadable playlist
+#Convert any YouTube channel into a downloadable playlist
 
 ##Head over to Youtube and find the URL of your favorite user, channel, or playlist.
 

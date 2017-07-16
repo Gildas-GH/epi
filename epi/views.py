@@ -16,7 +16,7 @@ ENDPOINT = 'https://www.googleapis.com/youtube/v3/'
 BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 
 #Landing page
-LANDING_URL = "https://epiapp.github.io"
+LANDING_URL = "https://amtopel.github.com/epi"
 
 
 def index(request):

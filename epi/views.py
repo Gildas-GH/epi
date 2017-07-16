@@ -25,6 +25,9 @@ def index(request):
     return redirect(LANDING_URL)
 
 
+def make_feed_from_custom(request, user):
+    return make_feed_from_channel(request, 'user', user)
+
 def make_feed_from_channel(request, id_type, id):
     
     channel_data = get_channel_data(id_type, id)

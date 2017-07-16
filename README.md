@@ -20,6 +20,6 @@ https://m.epiyoutube.com/user/latenight?vid=1
 https://www.epiyoutube.com/channel/UCVTyTA7-g9nopHeHbeuvpRA?vid=1
 https://www.epiyoutube.com/playlist?list=PLUl4u3cNGP61Oq3tWYp6V_F-5jb5L2iHb&vid=1
 
-##H it subscribe. You're all set. You can now download and refresh episodes, just like with any other podcast.
+## Hit subscribe. You're all set. You can now download and refresh episodes, just like with any other podcast.
 
 Pease consider making a donation to help keep it up and running.

@@ -1,3 +1,7 @@
+---
+title: Epi - Convert any YouTube channel into a downloadable playlist
+---
+
 ## 1. Head over to YouTube in your browser, and find the URL of your favorite user, channel, or playlist.
 
 The URL will look like one of these:

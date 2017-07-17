@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
-title: Epi
+title: Epi - Convert any YouTube channel into a downloadable playlist
 description: Convert any YouTube channel into a downloadable playlist
 gems:
   - jekyll-seo-tag

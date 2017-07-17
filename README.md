@@ -21,4 +21,4 @@ Note: Epi generates audio podcasts by default. If you'd like a video podcast ins
 
 ## 3. Hit subscribe. You're all set. You can now download and refresh episodes, just like with any other podcast.
 
-Pease consider making a donation to help keep it up and running.
+If you enjoy this service, please consider making a donation to help keep it up and running.

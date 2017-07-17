@@ -16,19 +16,17 @@ ENDPOINT = 'https://www.googleapis.com/youtube/v3/'
 BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 
 #Landing page
-LANDING_URL = "https://amtopel.github.io/epi"
+HOMEPAGE = "https://amtopel.github.io/epi"
 
 
 def index(request):
-    """The landing page."""
+    """Redirect to the project homepage if there's no path in the URL."""
 
-    return redirect(LANDING_URL)
+    return redirect(HOMEPAGE)
 
-
-def make_feed_from_custom(request, user):
-    return make_feed_from_channel(request, 'user', user)
 
 def make_feed_from_channel(request, id_type, id):
+    """Create an RSS feed from a username or channel ID"""
     
     channel_data = get_channel_data(id_type, id)
     
@@ -43,6 +41,7 @@ def make_feed_from_channel(request, id_type, id):
 
 
 def make_feed_from_playlist(request):
+    """Create an RSS feed from a YouTube playlist"""
 
     try:
         playlist_id = request.GET['list']
@@ -61,10 +60,9 @@ def make_feed_from_playlist(request):
 
 
 def render_feed(request, playlist_data, channel_data):
-    """Render an RSS feed from the playlist data, channel data, and desired media type."""
+    """Render the RSS feed from the playlist data, channel data, and desired podcast type (audio or video)."""
 
     videos_data = get_videos_data(playlist_data)
-
     
     for item in videos_data['items']:
         #Reformat dates for RSS (RFC 2822)
@@ -91,6 +89,11 @@ def render_feed(request, playlist_data, channel_data):
     videos_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
 
     return render(request, 'epi/feed.xml', videos_data)
+
+def make_feed_from_custom(request, user):
+    """Handle custom URL paths like '/coldplayvevo'."""
+
+    return make_feed_from_channel(request, 'user', user)
 
 
 def handle_watch_url(request):
@@ -131,6 +134,7 @@ def get_playlist_data(playlist_id):
 
 
 def get_videos_data(playlist_data):
+    """Return a dictionary of videos data from a set of playlist data."""
 
     video_ids = [item['snippet']['resourceId']['videoId'] for item in playlist_data['items']]
 

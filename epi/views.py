@@ -25,15 +25,15 @@ def index(request):
     return redirect(HOMEPAGE)
 
 
-def make_feed_from_channel(request, id_type, id):
+def make_feed_from_channel(request, id_type, id_value):
     """Create an RSS feed from a username or channel ID"""
 
-    channel_data = get_channel_data(id_type, id)
+    channel_data = get_channel_data(id_type, id_value)
 
     try:
         uploads_playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
     except IndexError:
-        return HttpResponse('It appears that "{}" is not a valid {}.'.format(id, id_type))
+        return HttpResponse('It appears that "{}" is not a valid {}.'.format(id_value, id_type))
 
     playlist_data = get_playlist_data(uploads_playlist_id)
 
@@ -74,7 +74,7 @@ def render_feed(request, playlist_data, channel_data):
         date_RFC = email.utils.format_datetime(parsed)
         item['snippet']['publishedAt'] = date_RFC
 
-        #Format file duration for iTunes
+        #Reformat file duration for iTunes
         duration_iso = item['contentDetails']['duration']
         parsed = isodate.parse_duration(duration_iso)
         item['contentDetails']['duration'] = str(parsed)
@@ -92,11 +92,11 @@ def render_feed(request, playlist_data, channel_data):
     return render(request, 'epi/feed.xml', videos_data)
 
 
-def get_channel_data(id_type, id):
+def get_channel_data(id_type, id_value):
     """Return a dictionary of channel data from a channel id or username."""
 
     id_type = 'id' if id_type == 'channel' else 'forUsername'
-    channel_data = yt_api_call('channels', 'contentDetails,snippet', id_type, id)
+    channel_data = yt_api_call('channels', 'contentDetails,snippet', id_type, id_value)
 
     return channel_data
 
@@ -135,11 +135,11 @@ def download(request, media_type, video_id):
     return redirect(redirect_url)
 
 
-def yt_api_call(path, part, id_type, id):
+def yt_api_call(path, part, id_type, id_value):
     """Make a call to the Youtube API"""
 
     params = {'key': KEY,
-              id_type: id,
+              id_type: id_value,
               'part': part,
               'maxResults': 50}
 

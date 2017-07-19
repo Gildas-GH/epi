@@ -1,21 +1,21 @@
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.utils.dateparse import parse_datetime
 import email.utils
-import isodate
 import json
-import pafy
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import urlopen
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.utils.dateparse import parse_datetime
+import isodate
+import pafy
 from .g import KEY
 
 
-#Youtube API
+#Youtube API URLs
 ENDPOINT = 'https://www.googleapis.com/youtube/v3/'
 BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 
-#Landing page
+#Project landing page
 HOMEPAGE = "https://amtopel.github.io/epi"
 
 
@@ -32,7 +32,7 @@ def make_feed_from_channel(request, id_type, id):
 
     try:
         uploads_playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-    except IndexError as e:
+    except IndexError:
         return HttpResponse('It appears that "{}" is not a valid {}.'.format(id, id_type))
 
     playlist_data = get_playlist_data(uploads_playlist_id)
@@ -60,24 +60,24 @@ def make_feed_from_playlist(request):
 
 
 def render_feed(request, playlist_data, channel_data):
-    """Render the RSS feed from the playlist data, channel data, and desired podcast type (audio or video)."""
+    """Render the RSS feed from the playlist data,
+    channel data, and desired podcast type (audio or video)."""
 
     video_ids = [item['snippet']['resourceId']['videoId'] for item in playlist_data['items']]
     videos_data = yt_api_call('videos', 'snippet,contentDetails', 'id', ','.join(video_ids))
 
     for item in videos_data['items']:
-        #Reformat dates for RSS (RFC 2822)
+
+        #Reformat publication dates for RSS (RFC 2822)
         date_ISO = item['snippet']['publishedAt']
         parsed = parse_datetime(date_ISO)
         date_RFC = email.utils.format_datetime(parsed)
         item['snippet']['publishedAt'] = date_RFC
 
-
-        #Format duration for iTunes
+        #Format file duration for iTunes
         duration_iso = item['contentDetails']['duration']
         parsed = isodate.parse_duration(duration_iso)
         item['contentDetails']['duration'] = str(parsed)
-
 
     #Add channel data to video data to make single context
     videos_data['channel_data'] = channel_data
@@ -90,6 +90,23 @@ def render_feed(request, playlist_data, channel_data):
     videos_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
 
     return render(request, 'epi/feed.xml', videos_data)
+
+
+def get_channel_data(id_type, id):
+    """Return a dictionary of channel data from a channel id or username."""
+
+    id_type = 'id' if id_type == 'channel' else 'forUsername'
+    channel_data = yt_api_call('channels', 'contentDetails,snippet', id_type, id)
+
+    return channel_data
+
+
+def get_playlist_data(playlist_id):
+    """Return a dictionary of playlist data from a playlist id."""
+
+    playlist_data = yt_api_call('playlistItems', 'snippet', 'playlistId', playlist_id)
+    return playlist_data
+
 
 def make_feed_from_custom(request, user):
     """Handle custom URL paths like '/coldplayvevo'."""
@@ -116,22 +133,6 @@ def download(request, media_type, video_id):
 
     redirect_url = stream.url
     return redirect(redirect_url)
-
-
-def get_channel_data(id_type, id):
-    """Return a dictionary of channel data from a channel id or username."""
-
-    id_type = 'id' if id_type == 'channel' else 'forUsername'
-    channel_data = yt_api_call('channels', 'contentDetails,snippet', id_type, id)
-
-    return channel_data
-
-
-def get_playlist_data(playlist_id):
-    """Return a dictionary of playlist data from a playlist id."""
-
-    playlist_data = yt_api_call('playlistItems', 'snippet', 'playlistId', playlist_id)
-    return playlist_data
 
 
 def yt_api_call(path, part, id_type, id):

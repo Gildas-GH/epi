@@ -1,7 +1,6 @@
 venv
 *.pyc
 staticfiles
-scratch/
 .vscode/
 .env
 g.py

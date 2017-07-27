@@ -26,7 +26,7 @@ def index(request):
 
 
 def make_feed_from_channel(request, id_type, id_value):
-    """Create an RSS feed from a username or channel ID"""
+    """Create an RSS feed from a YouTube username or channel ID"""
 
     channel_data = get_channel_data(id_type, id_value)
 
@@ -41,7 +41,7 @@ def make_feed_from_channel(request, id_type, id_value):
 
 
 def make_feed_from_playlist(request):
-    """Create an RSS feed from a YouTube playlist"""
+    """Create an RSS feed from a YouTube playlist."""
 
     try:
         playlist_id = request.GET['list']
@@ -136,7 +136,7 @@ def download(request, media_type, video_id):
 
 
 def yt_api_call(path, part, id_type, id_value):
-    """Make a call to the Youtube API"""
+    """Make a call to the Youtube API."""
 
     params = {'key': KEY,
               id_type: id_value,

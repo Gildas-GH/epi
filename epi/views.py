@@ -16,7 +16,7 @@ ENDPOINT = 'https://www.googleapis.com/youtube/v3/'
 BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 
 #Project landing page
-HOMEPAGE = "https://github.com/amtopel/epi"
+HOMEPAGE = "https://github.com/amtopel/epi/blob/master/README.md"
 
 
 def index(request):

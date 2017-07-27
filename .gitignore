@@ -4,4 +4,3 @@ staticfiles
 scratch/
 .vscode/
 .env
-g.py

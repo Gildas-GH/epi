@@ -14,7 +14,7 @@
         <item>
             <title>{{ item.snippet.title }}</title>
             <description>{{ item.snippet.description }}</description>
-            <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}" type="audio/mp4"/>
+            <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}" type="{{ podcast_type }}/mp4"/>
             <guid>http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}</guid>
             <pubDate>{{ item.snippet.publishedAt }}</pubDate>
             <itunes:duration>{{ item.contentDetails.duration }}</itunes:duration>

@@ -129,7 +129,7 @@ def download(request, media_type, video_id):
     video_url = BASE_VIDEO_URL + video_id
     video = pafy.new(video_url)
 
-    stream = video.getbest(preftype="mp4") if media_type == 'video' else video.getbestaudio(preftype="m4a")
+    stream = video.getbestaudio(preftype="m4a") if media_type == 'audio' else video.getbest(preftype="mp4")  
 
     redirect_url = stream.url
     return redirect(redirect_url)

@@ -13,7 +13,10 @@ Your modified URL should look like one of these:
 + `https://www.epiyoutube.com/channel/UCVTyTA7-g9nopHeHbeuvpRA`
 + `https://www.epiyoutube.com/playlist?list=PLUl4u3cNGP61Oq3tWYp6V_F-5jb5L2iHb`
 
-Note: Epi now generates video podcasts by default. If you'd like an audio podcast instead, add `?a` to the end of the URL for users or channels.  Add `&a` to the end of the URL for playlists.
+Note: Epi now generates *video* podcasts by default. If you'd like an audio podcast instead, simply add `?a` to the end of the URL for users or channels, or add `&a` to the end of the URL for playlists:
++ `https://m.epiyoutube.com/user/latenight?a`
++ `https://www.epiyoutube.com/channel/UCVTyTA7-g9nopHeHbeuvpRA?a`
++ `https://www.epiyoutube.com/playlist?list=PLUl4u3cNGP61Oq3tWYp6V_F-5jb5L2iHb&a`
 
 ## 3. Hit subscribe. You're all set. You can now download and refresh episodes, just like with any other podcast.
 

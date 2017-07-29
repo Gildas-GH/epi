@@ -9,7 +9,7 @@ The URL will look like one of these:
 ## 2. Open up your podcasts app and add a new podcast by URL. Copy and paste in the URL from step 1, except type in `epi` right before `youtube`.
 
 Your modified URL should look like one of these:
-+ `https://m.epiyoutube.com/user/latenight`
++ `https://m.**epi**youtube.com/user/latenight`
 + `https://www.epiyoutube.com/channel/UCVTyTA7-g9nopHeHbeuvpRA`
 + `https://www.epiyoutube.com/playlist?list=PLUl4u3cNGP61Oq3tWYp6V_F-5jb5L2iHb`
 

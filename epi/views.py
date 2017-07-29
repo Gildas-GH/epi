@@ -83,11 +83,11 @@ def render_feed(request, playlist_data, channel_data):
     videos_data['channel_data'] = channel_data
 
     #Add media type
-    podcast_type = 'video' if int(request.GET.get('vid', 0)) else 'audio'
+    podcast_type = 'audio' if 'a' in request.GET else 'video'
     videos_data['podcast_type'] = podcast_type
 
     #Add media extension
-    videos_data['media_extension'] = 'mp4' if podcast_type == 'video' else 'm4a'
+    videos_data['media_extension'] = 'm4a' if podcast_type == 'audio' else 'mp4'
 
     return render(request, 'epi/feed.xml', videos_data)
 

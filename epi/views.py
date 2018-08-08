@@ -148,4 +148,4 @@ def yt_api_call(path, part, id_type, id_value):
     with urlopen(data_url) as response:
         json_data = response.read()
 
-    return json.loads(json_data)
+    return json.loads(json_data.decode('utf-8'))

@@ -27,7 +27,7 @@ Your modified URL should look like one of these:
 
 ## Install it on your own server
 
-If you don't want to use the online version, you can install EPI on your own server. It requires Python 3.5+ (tested on Python 3.5.3 and 3.6.1), pip and git.
+If you don't want to use the online version, you can install EPI on your own server. It requires Python 3.5+ (tested on Python 3.5.3 and 3.6.1), pip, git and [youtube-dl](http://rg3.github.io/youtube-dl/download.html).
 ### Steps :
 - Clone the repository : ``git clone https://github.com/Gildas-GH/epi``
 - Install requirements : ``pip3 install -r requirements.txt``

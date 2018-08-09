@@ -6,6 +6,7 @@ from urllib.request import urlopen
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.dateparse import parse_datetime
+from django.template import Context, loader
 import isodate
 import pafy
 from .g import KEY
@@ -18,12 +19,11 @@ BASE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 #Project landing page
 HOMEPAGE = "https://github.com/amtopel/epi/blob/master/README.md"
 
-
 def index(request):
     """Redirect to the project homepage if there's no path in the URL."""
-
-    return redirect(HOMEPAGE)
-
+    # return redirect(HOMEPAGE)
+    template = loader.get_template("epi/index.html")
+    return HttpResponse(template.render())
 
 def make_feed_from_channel(request, id_type, id_value):
     """Create an RSS feed from a YouTube username or channel ID"""

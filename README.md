@@ -88,3 +88,8 @@ WantedBy=multi-user.target
 Make sure you edit user, group and the software path.
 
 Then you can run ``service epi start`` to start the software and access it from the address you set in nginx. The rules to create a podcast will be the same (``http(s)://domain.tld/playlist?list=PLUl4u3cNGP61Oq3tWYp6V_F-5jb5L2iHb&a`` for example).
+
+## Note
+You can also use EPI to download a single video :
+- Video format : https://www.epiyoutube.com/download/video/VideoID.mp4
+- Audio format : https://www.epiyoutube.com/download/audio/VideoID.m4a

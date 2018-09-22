@@ -13,6 +13,7 @@
         {% for item in items %}
         <item>
             <title>{{ item.snippet.title }}</title>
+            <link>https://www.youtube.com/watch?v={% url 'download' podcast_type item.id %}</link>
             <description>{{ item.snippet.description }}</description>
             <enclosure url="http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}" type="{{ podcast_type }}/mp4"/>
             <guid>http://{{ request.get_host }}{% url 'download' podcast_type item.id %}.{{ media_extension }}</guid>
